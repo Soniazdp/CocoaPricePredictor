@@ -1,32 +1,26 @@
-## Dataset Overview
+# Cocoa Price & Climate Data
 
-| Dataset Type | Features | Best For | File |
-|-------------|----------|----------|------|
-| **Full** | 17 aggregated features | Machine Learning | `{train/test}_full.csv` |
-| **Simple** | 9 key features | Classical Time Series | `{train/test}_simple.csv` |
+## Data Versions
+- **Full** (17 features): For ML (`*_full.csv`)  
+- **Simple** (9 features): For time series (`*_simple.csv`)
 
-### Temporal Coverage
+## Data Splits (80:20)
+| Split      | Period          | Months |
+|------------|-----------------|--------|
+| Training   | 1994-10:2020-02 | 2,296  |
+| Test       | 2020-02:2024-11 | 575    |
 
-| Split Type | Period | Duration | Notes |
-|------------|--------|----------|-------|
-| **Training** | 1994-10 to 2020-02 | 2296 months | Chronologically first 80% |
-| **Test** | 2020-02 to 2024-11 | 575 months | Chronologically last 20% |
+## Key Features
+### Pricing
+- `price_usd_per_tonne_last`: Month-end price (USD/tonne)
+- `price_usd_per_tonne_std`: Price volatility
 
+### Climate
+- `precipitation_sum`: Monthly rainfall (mm)
+- `avg_temp_mean`: Avg temperature (°C)  
+- `max_temp_max`: Hottest day (°C)
 
-## Other Explanation
-
-### Core Metrics
-| Feature | Description |
-|--------|-------------|
-| `price_usd_per_tonne_last` | End-of-month cocoa price (USD/tonne)|
-| `price_usd_per_tonne_std` | Price volatility (USD/tonne)|
-| `precipitation_sum` | Monthly total rainfall
-| `avg_temp_mean` | Monthly average temperature
-| `max_temp_max` | Monthly maximum high temp
-
-### Specialized Features
-| Feature | Calculation | Use Case |
-|---------|-------------|---------|
-| `precipitation_count` | Rainy days per month | Drought analysis |
-| `min_temp_min` | Coldest daily low | Frost impact studies |
-| `avg_temp_std` | Temperature variability | Climate change research |
+### Specialized
+- `precipitation_count`: Rainy days → Drought studies  
+- `min_temp_min`: Coldest day → Frost analysis  
+- `avg_temp_std`: Temp variation → Climate research
