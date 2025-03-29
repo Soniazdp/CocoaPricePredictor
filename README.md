@@ -1,6 +1,7 @@
 # Cocoa Price & Climate Data
 
 ## Data Versions
+- **Fx rates** (USDGHS): Released by the Bank of Ghana (`28 Mar 2025` - `02 Jan 1996`)
 - **Full** (17 features): For ML (`*_full.csv`)  
 - **Simple** (9 features): For time series (`*_simple.csv`)
 
