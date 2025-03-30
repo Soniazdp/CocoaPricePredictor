@@ -20,7 +20,7 @@ ets_model # AIC: 37327.95
 
 # Forecast on test set
 forecast_ets <- forecast(ets_model, h = length(train$price_usd_per_tonne_last))
-accuracy(forecast_ets, train$price_usd_per_tonne_last)  # test RMSE(775.2803) 10× higher than training RMSE(70.6784)
+accuracy(forecast_ets, test$price_usd_per_tonne_last)  # test RMSE(2418.2449) 33× higher than training RMSE(70.6784)
 
 
 #### Fit SARIMA model ####
@@ -29,7 +29,7 @@ summary(sarima_model) # AIC: 26062.84
 
 # Forecast on test set
 forecast_sarima <- forecast(sarima_model, h = length(train$price_usd_per_tonne_last))
-accuracy(forecast_sarima, train$price_usd_per_tonne_last)  # test RMSE(775.28229) 11× higher than training RMSE(70.67838)
+accuracy(forecast_sarima, test$price_usd_per_tonne_last)  # test RMSE(2418.24317) 33× higher than training RMSE(70.67838)
 
 
 #### Fit GARCH model ####
