@@ -1,4 +1,4 @@
-# Cocoa Price & Climate Data
+****# Cocoa Price & Climate Data
 
 ## Data Versions
 - **Fx rates** (USDGHS): Released by the Bank of Ghana (`28 Mar 2025` - `02 Jan 1996`)
@@ -8,8 +8,8 @@
 ## Data Splits (80:20)
 | Split      | Period          | Months |
 |------------|-----------------|--------|
-| Training   | 1994-10:2020-01 | 2,296  |
-| Test       | 2020-02:2024-11 | 575    |
+| Training   | 1996-01 to 2019-01 | 277 months |
+| Test       | 2019-02 to 2024-11 | 70 months |
 
 ## Key Features
 ### Pricing
