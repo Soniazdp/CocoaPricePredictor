@@ -81,7 +81,7 @@ summary_results
 # Forecast v.s. actual Plot by ETS model
 plot(ets_results$time, ets_results$actual, type = "l", col = "black", 
      xlab = "Time", ylab = "Price (USD per tonne)", 
-     main = "ETS Forecast vs. Actual Prices")
+     main = "Walk-Forward ETS Forecast vs. Actual Prices")
 lines(ets_results$time, ets_results$predicted, col = "red")
 legend("topleft", legend = c("Actual", "Forecast"), col = c("black", "red"), lty = 1)
 
@@ -89,7 +89,7 @@ legend("topleft", legend = c("Actual", "Forecast"), col = c("black", "red"), lty
 # Forecast v.s. actual Plot by SARIMA model
 plot(sarima_results$time, sarima_results$actual, type = "l", col = "black", 
      xlab = "Time", ylab = "Price (USD per tonne)", 
-     main = "SARIMA Forecast vs. Actual Prices")
+     main = "Walk-Forward SARIMA Forecast vs. Actual Prices")
 lines(sarima_results$time, sarima_results$predicted, col = "red")
 legend("topleft", legend = c("Actual", "Forecast"), col = c("black", "red"), lty = 1)
 
