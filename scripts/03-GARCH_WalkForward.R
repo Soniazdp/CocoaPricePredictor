@@ -65,3 +65,30 @@ mse(actuals_clean, forecasts_clean)
 plot(actuals_clean, type = 'l', col = 'black', ylab = 'Return', main = 'Walk-Forward GARCH Forecast vs Actuals')
 lines(forecasts_clean, col = 'red')
 legend("topleft", legend = c("Actual", "Forecast"), col = c("black", "red"), lty = 1)
+
+
+
+# Reconstruct predicted prices
+P_train_last <- tail(full_data_ts[1:train_window], 1)  # Last observed price before forecasts start
+
+# Convert log return forecasts to price level forecasts
+price_forecasts <- numeric(length(forecasts_clean))
+price_actuals <- numeric(length(actuals_clean))
+
+price_forecasts[1] <- P_train_last * exp(forecasts_clean[1])
+price_actuals[1] <- P_train_last * exp(actuals_clean[1])
+
+for (i in 2:length(forecasts_clean)) {
+  price_forecasts[i] <- price_forecasts[i-1] * exp(forecasts_clean[i])
+  price_actuals[i] <- price_actuals[i-1] * exp(actuals_clean[i])
+}
+
+# Recalculate RMSE, MAE, MSE on price levels
+rmse(price_actuals, price_forecasts)
+mae(price_actuals, price_forecasts)
+mse(price_actuals, price_forecasts)
+
+# Plot actual vs forecasted prices
+plot(price_actuals, type = 'l', col = 'black', ylab = 'Price', main = 'Price Forecast vs Actual')
+lines(price_forecasts, col = 'red')
+legend("topleft", legend = c("Actual", "Forecast"), col = c("black", "red"), lty = 1)
