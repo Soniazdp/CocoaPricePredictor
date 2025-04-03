@@ -50,7 +50,6 @@ for (i in 1:n_forecasts) {
   }
 }
 
-
 # Remove NAs (if any)
 valid <- !is.na(forecasts)
 actuals_clean <- actuals[valid]
@@ -62,7 +61,7 @@ mae(actuals_clean, forecasts_clean)
 mse(actuals_clean, forecasts_clean)
 
 # Plot
-plot(actuals_clean, type = 'l', col = 'black', ylab = 'Return', main = 'Walk-Forward GARCH Forecast vs Actuals')
+plot(actuals_clean, type = 'l', col = 'black', xlab = "Time", ylab = "Price (USD per tonne)", main = 'Walk-Forward GARCH Forecast vs Actuals')
 lines(forecasts_clean, col = 'red')
 legend("topleft", legend = c("Actual", "Forecast"), col = c("black", "red"), lty = 1)
 
@@ -89,6 +88,7 @@ mae(price_actuals, price_forecasts)
 mse(price_actuals, price_forecasts)
 
 # Plot actual vs forecasted prices
-plot(price_actuals, type = 'l', col = 'black', ylab = 'Price', main = 'Price Forecast vs Actual')
+plot(price_actuals, type = 'l', col = 'black',xlab = "Time", ylab = "Price (USD per tonne)", main = 'GARCH Model Price Forecast vs Actual')
 lines(price_forecasts, col = 'red')
 legend("topleft", legend = c("Actual", "Forecast"), col = c("black", "red"), lty = 1)
+
