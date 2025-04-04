@@ -21,35 +21,26 @@ test_window <- 4 # 1 month for testing
 results <- data.frame(iteration = integer(), model = character(), MAE = numeric(), MSE = numeric(), RMSE = numeric())
 sarima_results <- data.frame(time = numeric(), actual = numeric(), predicted = numeric())
 
-# Initialize exogenous variables for prediction tracking
-exog_train <- train %>% select(precipitation_sum, max_temp_mean, min_temp_mean, avg_temp_mean, Mid.Rate_mean)
-exog_test <- test %>% select(precipitation_sum, max_temp_mean, min_temp_mean, avg_temp_mean, Mid.Rate_mean)
-
 ### Loop through the dataset with rolling training and test sets ###
 for (i in seq(from = train_window, to = (nrow(full_data) - test_window), by = test_window)) {
-  print(i)
-
   # Define Training and Test Indices
   train_index <- (i - train_window):(i - 1) # Training data is the previous 24 months (before the current test window)
   test_index <- i:(i + test_window - 1) # Test data is the current point (the 25th, 26th, etc.)
 
-  train <- full_data[train_index, ]
-  test <- full_data[test_index, ]
+  train_window_data <- full_data[train_index, ]
+  test_window_data <- full_data[test_index, ]
 
-  # Exogenous variables for training (observed values for training period)
-  exog_train_subset <- exog_train[(i - train_window):(i - 1), ]
-  # Exogenous variables for testing (true values for test period)
-  exog_test_subset <- exog_test[i:(i + test_window - 1), ]
+  exog_train_data <- full_data[train_index, c("precipitation_sum", "max_temp_mean", "min_temp_mean", "avg_temp_mean", "Mid.Rate_mean")]
 
   #### Fit SARIMAX Model ####
-  sarimax_model <- auto.arima(train$price_usd_per_tonne_mean, xreg = as.matrix(exog_train_subset), seasonal = TRUE)
+  sarimax_model <- auto.arima(train_window_data$price_usd_per_tonne_mean, xreg = as.matrix(exog_train_data), seasonal = TRUE)
 
   # Fit each SARIMAX model excluding its own value from xreg
-  sarimax_precipitation <- auto.arima(train$precipitation_sum, seasonal = TRUE)
-  sarimax_max_temp <- auto.arima(train$max_temp_mean, seasonal = TRUE)
-  sarimax_min_temp <- auto.arima(train$min_temp_mean, seasonal = TRUE)
-  sarimax_avg_temp <- auto.arima(train$avg_temp_mean, seasonal = TRUE)
-  sarimax_rate <- auto.arima(train$Mid.Rate_mean, seasonal = TRUE)
+  sarimax_precipitation <- auto.arima(train_window_data$precipitation_sum, seasonal = TRUE)
+  sarimax_max_temp <- auto.arima(train_window_data$max_temp_mean, seasonal = TRUE)
+  sarimax_min_temp <- auto.arima(train_window_data$min_temp_mean, seasonal = TRUE)
+  sarimax_avg_temp <- auto.arima(train_window_data$avg_temp_mean, seasonal = TRUE)
+  sarimax_rate <- auto.arima(train_window_data$Mid.Rate_mean, seasonal = TRUE)
 
   # Forecasting each variable using SARIMA models (excluding the target variable from xreg)
   forecast_sarimax_precipitation <- forecast(sarimax_precipitation, h = test_window)
@@ -69,15 +60,15 @@ for (i in seq(from = train_window, to = (nrow(full_data) - test_window), by = te
   forecast_sarimax <- forecast(sarimax_model, xreg = as.matrix(forecasted_exog_test), h = test_window)
 
   # SARIMAX performance
-  rmse_sarimax <- rmse(test$price_usd_per_tonne_mean, forecast_sarimax$mean)
-  mae_sarimax <- mae(test$price_usd_per_tonne_mean, forecast_sarimax$mean)
-  mse_sarimax <- mse(test$price_usd_per_tonne_mean, forecast_sarimax$mean)
+  rmse_sarimax <- rmse(test_window_data$price_usd_per_tonne_mean, forecast_sarimax$mean)
+  mae_sarimax <- mae(test_window_data$price_usd_per_tonne_mean, forecast_sarimax$mean)
+  mse_sarimax <- mse(test_window_data$price_usd_per_tonne_mean, forecast_sarimax$mean)
 
   # Store results
   results <- rbind(results, data.frame(iteration = i, model = "SARIMAX", MAE = mae_sarimax, MSE = mse_sarimax, RMSE = rmse_sarimax))
   sarima_results <- rbind(sarima_results, data.frame(
     time = test_index, # Time points for test set
-    actual = test$price_usd_per_tonne_mean,
+    actual = test_window_data$price_usd_per_tonne_mean,
     predicted = as.numeric(forecast_sarimax$mean)
   ))
 }
