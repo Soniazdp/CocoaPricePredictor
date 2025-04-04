@@ -5,6 +5,7 @@ library(rugarch)
 library(Metrics)
 library(ggplot2)
 library(xts)
+library(zoo)
 
 # Load datasets
 train <- read.csv("data/train_simple.csv")
@@ -81,11 +82,15 @@ summary_results <- results %>%
 summary_results
 
 
+# Create a sequence of dates starting from December 1997
+start_date <- as.yearmon("1997-12")
+time_labels <- seq(start_date, length.out = nrow(sarima_results), by = 1/12)
+
 # Forecast v.s. actual Plot by SARIMA model
-plot(sarima_results$time, sarima_results$actual,
+plot(time_labels, sarima_results$actual,
   type = "l", col = "black",
   xlab = "Time", ylab = "Price (USD per tonne)",
   main = "Walk-Forward SARIMA Forecast vs. Actual Prices"
 )
-lines(sarima_results$time, sarima_results$predicted, col = "red")
-legend("topleft", legend = c("Actual", "Forecast"), col = c("black", "red"), lty = 1)
+lines(time_labels, sarima_results$predicted, col = "red")
+legend("topleft", legend = c("Actual", "Forecast"), col = c("black", "red"), lty = 1, cex = 1)
