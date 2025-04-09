@@ -66,7 +66,6 @@ lines(forecasts_clean, col = 'red')
 legend("topleft", legend = c("Actual", "Forecast"), col = c("black", "red"), lty = 1)
 
 
-
 # Reconstruct predicted prices
 P_train_last <- tail(full_data_ts[1:train_window], 1)  # Last observed price before forecasts start
 
@@ -87,8 +86,15 @@ rmse(price_actuals, price_forecasts)
 mae(price_actuals, price_forecasts)
 mse(price_actuals, price_forecasts)
 
-# Plot actual vs forecasted prices
-plot(price_actuals, type = 'l', col = 'black',xlab = "Time", ylab = "Price (USD per tonne)", main = 'Walk-Forward GARCH Forecast vs. Actual Price')
-lines(price_forecasts, col = 'red')
-legend("topleft", legend = c("Actual", "Forecast"), col = c("black", "red"), lty = 1)
 
+# Create a sequence of dates starting from December 1997
+start_date <- as.yearmon("1997-12")
+time_labels <- seq(start_date, length.out = length(price_actuals), by = 1/12)
+
+# Plot actual vs forecasted prices
+plot(time_labels, price_actuals, 
+     type = 'l', col = 'black',
+     xlab = "Time", ylab = "Price (USD per tonne)", 
+     main = 'GARCH Forecast vs. Actual Price')
+lines(time_labels, price_forecasts, col = 'red')
+legend("topleft", legend = c("Actual", "Forecast"), col = c("black", "red"), lty = 1)

@@ -15,7 +15,7 @@ full_data <- rbind(train, test)
 
 # Define window sizes
 train_window <- 24  # 24 months (2 years)
-test_window <- 3    # 3 months
+test_window <- 4    # 1 month for testing
 
 # Store performance & prediction metrics
 results <- data.frame(iteration = integer(), model = character(), MAE = numeric(), MSE = numeric(), RMSE = numeric())
@@ -78,21 +78,22 @@ summary_results <- results %>%
 
 summary_results
 
+# Create a sequence of dates starting from December 1997
+start_date <- as.yearmon("1997-12")
+time_labels <- seq(start_date, length.out = nrow(sarima_results), by = 1/12)
+
 # Forecast v.s. actual Plot by ETS model
-plot(ets_results$time, ets_results$actual, type = "l", col = "black", 
+plot(time_labels, ets_results$actual, type = "l", col = "black", 
      xlab = "Time", ylab = "Price (USD per tonne)", 
-     main = "Walk-Forward ETS Forecast vs. Actual Prices")
-lines(ets_results$time, ets_results$predicted, col = "red")
+     main = "ETS Forecast vs. Actual Prices")
+lines(time_labels, ets_results$predicted, col = "red")
 legend("topleft", legend = c("Actual", "Forecast"), col = c("black", "red"), lty = 1)
 
 
 # Forecast v.s. actual Plot by SARIMA model
-plot(sarima_results$time, sarima_results$actual, type = "l", col = "black", 
+plot(time_labels, sarima_results$actual, type = "l", col = "black", 
      xlab = "Time", ylab = "Price (USD per tonne)", 
-     main = "Walk-Forward SARIMA Forecast vs. Actual Prices")
-lines(sarima_results$time, sarima_results$predicted, col = "red")
+     main = "SARIMA Forecast vs. Actual Prices")
+lines(time_labels, sarima_results$predicted, col = "red")
 legend("topleft", legend = c("Actual", "Forecast"), col = c("black", "red"), lty = 1)
-
-
-
 
